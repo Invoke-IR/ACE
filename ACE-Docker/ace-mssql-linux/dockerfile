@@ -1,0 +1,16 @@
+FROM microsoft/mssql-server-linux
+MAINTAINER Jared Atkinson <jared@invoke-ir.com>
+
+# Create app directory
+RUN mkdir -p /usr/src/ace
+WORKDIR /usr/src/ace
+
+#COPY entrypoint.sh /usr/src/ace
+COPY import-data.sh /usr/src/ace
+COPY ace.sql /usr/src/ace
+
+# Grant permissions for the import-data script to be executable
+#RUN chmod +x /usr/src/ace/entrypoint.sh
+RUN chmod +x /usr/src/ace/import-data.sh
+
+CMD /bin/bash /usr/src/ace/import-data.sh $SA_PASSWORD

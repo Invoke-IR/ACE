@@ -1,0 +1,16 @@
+FROM microsoft/aspnetcore-build AS builder
+MAINTAINER Jared Atkinson <jared@invoke-ir.com>
+WORKDIR /source
+COPY *.csproj .
+COPY nuget.config .
+RUN dotnet restore
+COPY . .
+RUN dotnet publish --output /ace/ --configuration Release
+
+FROM microsoft/aspnetcore
+MAINTAINER Jared Atkinson <jared@invoke-ir.com>
+WORKDIR /ace
+COPY --from=builder /ace .
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["/ace/entrypoint.sh"]
