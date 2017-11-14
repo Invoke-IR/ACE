@@ -12,7 +12,7 @@ def main():
 	def hashlookupconsumer(ch, method, properties, body):
 		message = json.loads(body)
 		try:
-			params = {'apikey': '4394b00b49b824695bf21eb3e55b52c8cbd5e322231ec62292b45e0d4927ab92', 'resource': message['SHA256Hash']}
+			params = {'apikey': '[APIKEY]', 'resource': message['SHA256Hash']}
 			headers = {"Accept-Encoding": "gzip, deflate", "User-Agent" : "gzip,  My Python requests library example client or username"}
 			response = requests.get('https://www.virustotal.com/vtapi/v2/file/report', params=params, headers=headers)
 			if response.status_code == 204:

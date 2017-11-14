@@ -6,9 +6,12 @@ networks:
       config:
         - subnet: 172.18.0.0/16
 
+volumes:
+  certs:
+
 services:
   ace-rabbitmq:
-    build: ./ace-rabbitmq
+    image: specterops/ace-rabbitmq
     container_name: ace-rabbitmq
     env_file: ./ace.env
     hostname: ace-rabbitmq
@@ -22,7 +25,7 @@ services:
       - 15672:15672
   
   ace-sql:
-    build: ./ace-mssql-linux
+    image: specterops/ace-mssql-linux
     container_name: ace-sql
     env_file: ./ace.env
     hostname: ace-sql
@@ -33,30 +36,18 @@ services:
         ipv4_address: 172.18.0.3
     ports: 
       - 1433:1433
-  
-  ace-app:
-    build: ./ace-app
-    container_name: ace-app
-    env_file:
-      - ./ace.env
-    hostname: ace-app
-    networks:
-      ace:
-        aliases:
-          - app.ace.local
-        ipv4_address: 172.18.0.4
 
   ace-web:
-    build: ./ace-web
-    container_name: ace-web
-    hostname: ace-web
+    image: specterops/ace-nginx
+    container_name: ace-nginx
+    hostname: ace-nginx
+    volumes:
+      - certs:/etc/nginx/certs
     networks:
       ace:
         aliases:
           - web.ace.local
-        ipv4_address: 172.18.0.5
+        ipv4_address: 172.18.0.4
     ports:
       - "80:80"
       - "443:443"
-    links:
-      - ace-app

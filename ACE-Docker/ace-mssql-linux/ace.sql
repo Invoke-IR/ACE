@@ -90,4 +90,4 @@ CREATE TABLE [dbo].[Users] (
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-INSERT INTO [dbo].[Users] ([Id], [ApiKey], [FirstName], [IsAdmin], [LastName], [UserName]) VALUES (N'334d89c9-da7a-43e8-a648-5dc8b22019ed', N'[APIKEY]', N'Admin', 1, N'Admin', N'admin')
+INSERT INTO [dbo].[Users] ([Id], [ApiKey], [FirstName], [IsAdmin], [LastName], [UserName]) VALUES (N'334d89c9-da7a-43e8-a648-5dc8b22019ed', N'A40E94D3-E463-4321-9E12-C1AE5D1A6525', N'Admin', 1, N'Admin', N'admin')
