@@ -47,10 +47,8 @@ function Start-AceDiscovery
             }
 
             $result = Invoke-AceWebRequest -Method Post -Uri "$($Uri)/ace/discover/domain" -Body (ConvertTo-Json $body -Compress) -ContentType application/json -ApiKey $ApiKey -CheckCert
-            #$result = Invoke-WebRequest -Method Post -Uri "$($Uri)/ace/discover/domain" -Body (ConvertTo-Json $body) -Headers $header -ContentType application/json
         }
     }
 
     Write-Output ($result | ConvertFrom-Json)
-    #Write-Output ($result.Content | ConvertFrom-Json)
 }

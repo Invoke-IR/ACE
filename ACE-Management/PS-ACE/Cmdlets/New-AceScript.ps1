@@ -28,21 +28,14 @@ function New-AceScript
         $Language,
         
         [Parameter()]
-        [ValidateSet('none','hash')]
-        [string[]]
-        $Enrichment,
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet('file','siem')]
         [string]
-        $OutputType
+        $RoutingKey
     )
 
     $body = @{
         Name = $Name
         Language = $Language
-        Enrichment = $Enrichment
-        Output = $OutputType
+        RoutingKey = $RoutingKey
         Content = [System.IO.File]::ReadAllBytes($Path)
     }
 

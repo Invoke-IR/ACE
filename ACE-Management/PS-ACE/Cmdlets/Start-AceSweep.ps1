@@ -7,6 +7,10 @@ function Start-AceSweep
         [string]
         $Uri,
 
+        [Parameter()]
+        [string]
+        $ExternalUri,
+
         [Parameter(Mandatory)]
         [string]
         $ApiKey,
@@ -24,10 +28,16 @@ function Start-AceSweep
         $ScriptId      
     )
 
+    if(-not $PSBoundParameters.ContainsKey('ExternalUri'))
+    {
+        $ExternalUri = $Uri
+    }
+
     $body = @{
         ComputerId = $ComputerId
         ScriptId = $ScriptId
         Uri = $Uri
+        ExternalUri = $ExternalUri
     }
 
     try
