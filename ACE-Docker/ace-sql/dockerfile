@@ -7,7 +7,7 @@ ENV ACCEPT_EULA Y
 RUN mkdir -p /usr/src/ace
 WORKDIR /usr/src/ace
 
-#COPY entrypoint.sh /usr/src/ace
+# Copy files to container
 COPY import-data.sh /usr/src/ace
 COPY ace.sql /usr/src/ace
 

@@ -5,10 +5,6 @@ networks:
     ipam:
       config:
         - subnet: 172.18.0.0/16
-
-volumes:
-  certs:
-
 services:
   ace-rabbitmq:
     image: specterops/ace-rabbitmq
@@ -23,9 +19,8 @@ services:
     ports: 
       - 5672:5672
       - 15672:15672
-  
   ace-sql:
-    image: specterops/ace-mssql-linux
+    image: specterops/ace-sql
     container_name: ace-sql
     env_file: ./ace.env
     hostname: ace-sql
@@ -36,17 +31,15 @@ services:
         ipv4_address: 172.18.0.3
     ports: 
       - 1433:1433
-
-  ace-web:
+  ace-nginx:
     image: specterops/ace-nginx
     container_name: ace-nginx
+    env_file: ./ace.env
     hostname: ace-nginx
-    volumes:
-      - certs:/etc/nginx/certs
     networks:
       ace:
         aliases:
-          - web.ace.local
+          - nginx.ace.local
         ipv4_address: 172.18.0.4
     ports:
       - "80:80"

@@ -41,19 +41,15 @@ CREATE TABLE [dbo].[Scripts] (
     [LastUpdateTime] DATETIME2 (7)    NOT NULL,
     [Name]           NVARCHAR (MAX)   NOT NULL,
     [Uri]            NVARCHAR (MAX)   NOT NULL,
-    [Enrichment]     NVARCHAR (MAX)   DEFAULT (N'') NOT NULL,
-    [Output]         NVARCHAR (MAX)   DEFAULT (N'') NOT NULL,
     CONSTRAINT [PK_Scripts] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 CREATE TABLE [dbo].[Downloads] (
     [Id]           UNIQUEIDENTIFIER NOT NULL,
-    [AccessedTime] DATETIME2 (7)    NOT NULL,
-    [BornTime]     DATETIME2 (7)    NOT NULL,
     [ComputerName] NVARCHAR (MAX)   NOT NULL,
+    [Content]      sql_variant      NOT NULL,
     [DownloadTime] DATETIME2 (7)    NOT NULL,
     [FullPath]     NVARCHAR (MAX)   NOT NULL,
-    [ModifiedTime] DATETIME2 (7)    NOT NULL,
     [Name]         NVARCHAR (MAX)   NOT NULL,
     CONSTRAINT [PK_Downloads] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
@@ -90,4 +86,4 @@ CREATE TABLE [dbo].[Users] (
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-INSERT INTO [dbo].[Users] ([Id], [ApiKey], [FirstName], [IsAdmin], [LastName], [UserName]) VALUES (N'334d89c9-da7a-43e8-a648-5dc8b22019ed', N'A40E94D3-E463-4321-9E12-C1AE5D1A6525', N'Admin', 1, N'Admin', N'admin')
+INSERT INTO [dbo].[Users] ([Id], [ApiKey], [FirstName], [IsAdmin], [LastName], [UserName]) VALUES (N'334d89c9-da7a-43e8-a648-5dc8b22019ed', N'[APIKEY]', N'Admin', 1, N'Admin', N'admin')

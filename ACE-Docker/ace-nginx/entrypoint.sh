@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Add Environment Variable to nginx.conf
+sed -i -e 's/\[WEBSERVICE_IP\]/'"$WEBSERVICE_IP"'/g' /etc/nginx/nginx.conf
+
 # Check if /etc/nginx/certs directory exits
 if [ ! -d /etc/nginx/certs ]; then
     mkdir /etc/nginx/certs
@@ -12,6 +15,4 @@ fi
 
 # Get and output SSL Thumbprint
 fingerprint=$(openssl x509 -in /etc/nginx/certs/server.crt -noout -fingerprint | sed 's/SHA1 Fingerprint=//g' |  sed 's/://g')
-echo "################################################################"
-echo "# ACE SSL Thumbprint: $fingerprint #"
-echo "################################################################"
+echo "\"Thumbprint\": \"$fingerprint\","
