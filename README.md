@@ -4,6 +4,8 @@ The Automated Collection and Enrichment (ACE) platform is a suite of tools for t
 
 ACE is meant to simplify the process of remotely collecting data across an environment by offering credential management, scheduling, centralized script management, and remote file downloading. ACE is designed to complement a SIEM by collecting data and enriching data; final analysis is best suited for SIEM tools such as Splunk, ELK, or the tools the analyst prefers.
 
+![alt text](resources/images/ACE_Infrastructure.png "ACE Infrastructure")
+
 ## Why use ACE?
 
 ACE grew out of the need to perform Compromise Assessments in places with common restrictions:
