@@ -22,7 +22,6 @@ get_appsettings_data(){
   echo "    $(docker logs ace-rabbitmq | grep UserName)"
   echo "    $(docker logs ace-rabbitmq | grep Password)"
   echo "    $(docker logs ace-nginx | grep Thumbprint)"
-  echo "    $(docker logs ace-sql | grep ApiKey)"
   echo "    \"SQLServer\": \"${host_ip}\""
   echo "    $(docker logs ace-sql | grep SQLPassword)"
   echo ""
