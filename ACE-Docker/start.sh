@@ -2,14 +2,22 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
+# *********** Check if user is root ***************
+if [[ $EUID -ne 0 ]]; then
+   echo "[ACE-INSTALLATION-INFO] YOU MUST BE ROOT TO RUN THIS SCRIPT!!!" 
+   exit 1
+fi
+
 LOGFILE="/var/log/ace-install.log"
 echoerror() {
     printf "${RC} * ERROR${EC}: $@\n" 1>&2;
 }
 
+# *********** Check System Kernel Name ***************
+systemKernel="$(uname -s)"
+
 install_docker(){
-  unameOut="$(uname -s)"
-  if [ "${unameOut}" == "Linux" ]; then
+  if [ "${systemKernel}" == "Linux" ]; then
       # Reference: https://get.docker.com/
       echo "[ACE-DOCKER-INSTALLATION-INFO] ACE identified Linux as the system kernel"
       echo "[ACE-DOCKER-INSTALLATION-INFO] Checking distribution list and version"
@@ -111,7 +119,7 @@ install_docker(){
           echo "[ACE-DOCKER-INSTALLATION-INFO] Docker already installed"
           echo "[ACE-DOCKER-INSTALLATION-INFO] Dockerizing ACE.."
       else
-          echo "[ACE-DOCKER-INSTALLATION-INFO] Install docker for $unameOut"
+          echo "[ACE-DOCKER-INSTALLATION-INFO] Install docker for $systemKernel"
           #exit 1
       fi
   fi
