@@ -5,9 +5,9 @@ sleep 45s
 
 
 # Check if the database already exists
-apikey="$(/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -d ACEWebService -Q "SELECT ApiKey FROM dbo.Users WHERE Id='334D89C9-DA7A-43E8-A648-5DC8B22019ED'" | grep -E '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}')"
-
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -d ACEWebService -Q "SELECT * FROM dbo.Scripts" >> /dev/null 2>&1
 ERROR=$?
+
 if [ $ERROR -ne 0 ]; then
   # Create Unique API Key
   apikey=$(cat /proc/sys/kernel/random/uuid)
@@ -16,6 +16,10 @@ if [ $ERROR -ne 0 ]; then
   #run the setup script to create the DB and the schema in the DB
   /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -Q "CREATE DATABASE ACEWebService" > /dev/null
   /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -d ACEWebService -i /usr/src/ace/ace.sql > /dev/null
+fi
+else
+  # We need to return the ApiKey
+  apikey="$(/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -d ACEWebService -Q "SELECT ApiKey FROM dbo.Users WHERE Id='334D89C9-DA7A-43E8-A648-5DC8B22019ED'" | grep -E '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}')"
 fi
 
 echo "\"ApiKey\": \"$apikey\","
