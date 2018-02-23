@@ -40,19 +40,6 @@ Run **Start-AceDiscovery** to automatically find computers on the Windows domain
 Run **Start-AceSweep** to start a sweep to run the selected scripts across the discovered endpoints.
 
 
-## How do I add scripts to ACE?
-ACE Scripts should be self-contained scripts to collect data. They should return JSON object with the data to be collected. You can use ConvertTo-JsonV2 cmdlet in ACE to convert PSObjects into JSON objects in a PowerShell V2 compatible way.
-
-We recommend PSReflect to access the Native/Win32 API in-memory in a PowerShell V2 compatible way. See Get-InjectedThread for a usage example.
-
-Use New-ACEScript to upload a new script to ACE. The new script can be added to existing scheduled sweeps or incorporated into new sweeps.
-
-[script design considerations]
-
-
-## What targets are supported by ACE?
-The included collection scripts are designed to be PowerShell V2+ and Python 2.7 compatible, and should work on Windows 7/Server 2008 R2 and newer, and most versions of macOS and Linux. 
-
 
 ## More Resources
 * [ACE GitHub Wiki](https://github.com/Invoke-IR/ACE/wiki)

@@ -27,7 +27,8 @@ function Invoke-AceWebRequest
         [string]
         $Body
     )
-    Try
+    
+    try
     {
         # Create web request
         $WebRequest = [System.Net.WebRequest]::Create($Uri)

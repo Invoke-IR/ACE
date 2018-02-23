@@ -28,12 +28,12 @@ namespace ACEWebService.Services
                 HostName = _settings.RabbitMQServer,
                 UserName = _settings.RabbitMQUserName,
                 Password = _settings.RabbitMQPassword,
-        };
+            };
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "ace_exchange", type: "topic");
+                channel.ExchangeDeclare(exchange: "ace_exchange", type: "topic", durable: true);
 
                 foreach (string message in sweepData.Data)
                 {
@@ -50,39 +50,6 @@ namespace ACEWebService.Services
                         basicProperties: null,
                         body: body);
                 }
-            }
-        }
-    }
-
-    public class SweepResultFileWriterService : ISweepResultProcessorService
-    {
-        private string _sweepResultsDirectory;
-
-        public SweepResultFileWriterService(string sweepResultsDirectory)
-        {
-            _sweepResultsDirectory = sweepResultsDirectory;
-        }
-
-        public void Process(Guid sweepId, SweepResultViewModel scanData)
-        {
-            string resultsDir = _sweepResultsDirectory + Path.DirectorySeparatorChar + sweepId + Path.DirectorySeparatorChar + scanData.ScanId;
-            string resultsFileName = scanData.ScanType + "_" + scanData.ResultDate + "_" + scanData.ComputerName + "_" + scanData.ScanId + ".json";
-            string resultsFile = resultsDir + Path.DirectorySeparatorChar + Path.GetFileName(resultsFileName);  // Prevent directory traversal
-
-            if (!Directory.Exists(resultsDir))
-            {
-                Directory.CreateDirectory(resultsDir);
-            }
-
-            if (File.Exists(resultsFile))
-            {
-                throw new Exception("Results file already exists. Results file path: " + resultsFile);
-            }
-
-            foreach(string message in scanData.Data)
-            {
-                Console.WriteLine(message);
-                File.AppendAllText(resultsFile, string.Format("{0}\r", message), Encoding.UTF8);
             }
         }
     }
