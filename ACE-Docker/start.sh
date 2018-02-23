@@ -151,9 +151,12 @@ install_docker
 get_host_ip
 
 # Build Docker Images and Start Containers
-docker-compose build
-docker-compose up -d
+echo "[ACE-INSTALLATION-INFO] Building ACE Docker Containers"
+docker-compose build >> $LOGFILE 2>&1
+echo "[ACE-INSTALLATION-INFO] Starting ACE Docker Images"
+docker-compose up -d >> $LOGFILE 2>&1
 
+echo "[ACE-INSTALLATION-INFO] Waiting for Docker Images to Start"
 sleep 60
 
 # Write appsettings.Production.json to screen
