@@ -41,13 +41,14 @@ CREATE TABLE [dbo].[Scripts] (
     [LastUpdateTime] DATETIME2 (7)    NOT NULL,
     [Name]           NVARCHAR (MAX)   NOT NULL,
     [Uri]            NVARCHAR (MAX)   NOT NULL,
+    [RoutingKey]     NVARCHAR (MAX)   NOT NULL,
     CONSTRAINT [PK_Scripts] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 CREATE TABLE [dbo].[Downloads] (
     [Id]           UNIQUEIDENTIFIER NOT NULL,
     [ComputerName] NVARCHAR (MAX)   NOT NULL,
-    [Content]      sql_variant      NOT NULL,
+    [Content]      VARBINARY (MAX)  NOT NULL,
     [DownloadTime] DATETIME2 (7)    NOT NULL,
     [FullPath]     NVARCHAR (MAX)   NOT NULL,
     [Name]         NVARCHAR (MAX)   NOT NULL,
