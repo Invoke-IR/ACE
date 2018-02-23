@@ -41,15 +41,10 @@
 
 function New-AppSettingsJson
 {
-    Write-Host 'docker logs ace-rabbitmq'
     $RabbitMQServer = Read-Host -Prompt RabbitMQServer
     $RabbitMQUser = Read-Host -Prompt RabbitMQUser
     $RabbitMQPassword = Read-Host -Prompt RabbitMQPassword -AsSecureString
-
-    Write-Host "docker logs ace-nginx"
-    $NginxSSLThumbprint = Read-Host -Prompt NginxSSLThumbprint
-
-    Write-Host 'docker logs ace-sql'
+    $NginxSSLThumbprint = Read-Host -Prompt Thumbprint
     $SQLServer = Read-Host -Prompt SQLServer
     $SQLPassword = Read-Host -Prompt SQLPassword -AsSecureString
     $EncryptionPassphrase = Read-Host -Prompt 'Choose an encryption passphrase for the SQL Server' -AsSecureString
