@@ -144,6 +144,47 @@ get_host_ip(){
     fi
 }
 
+# Write appsettings.Production.json to screen
+get_appsettings_data(){
+  echo ""
+  echo ""
+  echo "=========================================================="
+  echo ""
+  echo "    \"RabbitMQServer\": \"${host_ip}\""
+  echo "    $(docker logs ace-rabbitmq | grep UserName)"
+  echo "    $(docker logs ace-rabbitmq | grep Password)"
+  echo "    $(docker logs ace-nginx | grep Thumbprint)"
+  echo "    $(docker logs ace-sql | grep ApiKey)"
+  echo "    \"SQLServer\": \"${host_ip}\""
+  echo "    $(docker logs ace-sql | grep DefaultConnection)"
+  echo ""
+  echo "=========================================================="
+  echo ""
+  echo ""
+}
+
+get_ps_settings(){
+# Provide configuration details for PowerShell Module
+  echo ""
+  echo ""
+  echo "==============================================================="
+  echo "|        Thank you for provisioning ACE with Docker!!         |"
+  echo "|  Please use the following information to interact with ACE  |"
+  echo "==============================================================="
+  echo "" 
+  echo "  \$settings = @{"
+  echo "    Uri        = 'https://${host_ip}'"
+  IFS='"' read -r -a array <<< "$(docker logs ace-sql | grep Api)"
+  echo "    ApiKey     = '${array[3]}'"
+  IFS='"' read -r -a array <<< "$(docker logs ace-nginx | grep Thumbprint)"
+  echo "    Thumbprint = '${array[3]}'"
+  echo "  }"
+  echo ""
+  echo "=============================================================="
+  echo ""
+  echo ""
+}
+
 # Test if Docker and Docker-Compose are installed
 install_docker
 
@@ -159,39 +200,5 @@ docker-compose up -d >> $LOGFILE 2>&1
 echo "[ACE-INSTALLATION-INFO] Waiting for Docker Images to Start"
 sleep 60
 
-# Write appsettings.Production.json to screen
-clear
-echo ""
-echo ""
-echo "=========================================================="
-echo ""
-echo "    RabbitMQServer: ${host_ip}"
-echo "    $(docker logs ace-rabbitmq | grep UserName)"
-echo "    $(docker logs ace-rabbitmq | grep Password)"
-echo "    $(docker logs ace-nginx | grep Thumbprint)"
-echo "    $(docker logs ace-sql | grep ApiKey)"
-echo "    $(docker logs ace-sql | grep StartAceSweep)"
-echo "    $(docker logs ace-sql | grep DownloadAceFile)"
-echo "    $(docker logs ace-sql | grep DefaultConnection)"
-echo ""
-echo "=========================================================="
-echo ""
-echo ""
-
-# Provide configuration details for PowerShell Module
-echo "==============================================================="
-echo "|        Thank you for provisioning ACE with Docker!!         |"
-echo "|  Please use the following information to interact with ACE  |"
-echo "==============================================================="
-echo "" 
-echo "  \$settings = @{"
-echo "    Uri        = 'https://${host_ip}'"
-IFS='"' read -r -a array <<< "$(docker logs ace-sql | grep Api)"
-echo "    ApiKey     = '${array[3]}'"
-IFS='"' read -r -a array <<< "$(docker logs ace-nginx | grep Thumbprint)"
-echo "    Thumbprint = '${array[3]}'"
-echo "  }"
-echo ""
-echo "=============================================================="
-echo ""
-echo ""
+get_appsettings_data
+get_ps_settings
