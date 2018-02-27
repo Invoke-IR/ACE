@@ -146,17 +146,23 @@ namespace ACEWebService.Services
                     }
                     else if (x.Item.Computer.SSH)
                     {
+                        
+                        //Creates a string of the target script to run over SSH
+                        string rawScript = System.Text.Encoding.ASCII.GetString(System.IO.File.ReadAllBytes(string.Format("scripts\\{0}.ace", x.Item.Script.Id)));
+                        
                         // Build command line to be run over SSH
                         string commandline = string.Format(
-                            @"curl -k {0}{1} | sudo python /dev/stdin --Server {0} --SweepId {2} --ScanId {3} --RoutingKey {4}", 
+                            @"echo ""{0}"" | sudo python - --Server {1} --SweepId {2} --ScanId {3} --RoutingKey {4} --Thumbprint {5}",
+                            rawScript,
                             x.Item.Uri, 
-                            x.Item.Script.Uri, 
                             x.Item.SweepId, 
-                            x.Item.ScanId
+                            x.Item.ScanId,
+                            x.Item.Script.RoutingKey,
+                            x.Item.Thumbprint
                         );
                         Console.WriteLine("[SSH] CommandLine: {0}", commandline);
 
-                        //KickOffSSHAsync(x.Item.Computer, credential, commandline);
+                        KickOffSSHAsync(x.Item.Computer, credential, commandline);
                     }
                     else if (x.Item.Computer.SMB)
                     {
