@@ -124,12 +124,16 @@ namespace ACEWebService.Services
                             x.Item.ScanId,
                             x.Item.Script.RoutingKey
                         );
+
                         string psScript = string.Format(
-                            @"Invoke-Expression (New-Object System.Net.WebClient).DownloadString('{0}/scripts/Start-AceScript.ps1'); {1}", 
+                            @"[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {{$certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]$args[1]; if($certificate -eq $null){{return $true}}; if($certificate.Thumbprint -eq '{0}'){{return $true}}else{{return $false}}}}; Invoke-Expression (New-Object System.Net.WebClient).DownloadString('{1}/scripts/Start-AceScript.ps1'); {2}", 
+                            x.Item.Thumbprint,
                             x.Item.Uri, 
                             executionArgs
                         );
+
                         Console.WriteLine("[WinRM:{0}] PsScript: {1}", x.Item.Computer.ComputerName, psScript);
+
                         string commandline = string.Format(
                             @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand {0}", 
                             Convert.ToBase64String(Encoding.Unicode.GetBytes(psScript))
@@ -141,22 +145,27 @@ namespace ACEWebService.Services
                         }
                         else
                         {
-                            //KickOffCimAsync(x.Item.Computer, credential, commandline, new DComSessionOptions());
+                            KickOffCimAsync(x.Item.Computer, credential, commandline, new DComSessionOptions());
                         }
                     }
                     else if (x.Item.Computer.SSH)
                     {
+                        //Creates a string of the target script to run over SSH
+                        string rawScript = System.Text.Encoding.ASCII.GetString(System.IO.File.ReadAllBytes(string.Format("scripts\\{0}.ace", x.Item.Script.Id)));
+
                         // Build command line to be run over SSH
                         string commandline = string.Format(
-                            @"curl -k {0}{1} | sudo python /dev/stdin --Server {0} --SweepId {2} --ScanId {3} --RoutingKey {4}", 
-                            x.Item.Uri, 
-                            x.Item.Script.Uri, 
-                            x.Item.SweepId, 
-                            x.Item.ScanId
+                            @"echo ""{0}"" | sudo python - --Server {1} --SweepId {2} --ScanId {3} --RoutingKey {4} --Thumbprint {5}",
+                            rawScript,
+                            x.Item.Uri,
+                            x.Item.SweepId,
+                            x.Item.ScanId,
+                            x.Item.Script.RoutingKey,
+                            x.Item.Thumbprint
                         );
                         Console.WriteLine("[SSH] CommandLine: {0}", commandline);
 
-                        //KickOffSSHAsync(x.Item.Computer, credential, commandline);
+                        KickOffSSHAsync(x.Item.Computer, credential, commandline);
                     }
                     else if (x.Item.Computer.SMB)
                     {
@@ -169,7 +178,6 @@ namespace ACEWebService.Services
 
                     x.Item = null;
                 }
-                //Console.WriteLine($"Exiting thread {Thread.CurrentThread}");
             },
 
             //Use this to make sure each task gets its own thread

@@ -33,7 +33,7 @@
 
     # Start and configure WinRM
     Start-Service -Name WinRM
-    Set-Item -Path WSMan:\localhost\Client\TrustedHosts -Value *
+    Set-Item -Path WSMan:\localhost\Client\TrustedHosts -Value * -Force
 
     # Change directories to ACEWebService directory
     Set-Location "$($FilePath)\ACEWebService"

@@ -39,30 +39,48 @@ function Start-AceScript
     # Download the script to execute from the server
     foreach($o in (Invoke-Expression $script))
     {
-        $o.Add('ComputerName', $HostFQDN)
-        $o.Add('SweepId', $SweepId)
-        $o.Add('ScanId', $ScanId)
-        $o.Add('ResultDate', $ResultDate)
+        if($o -ne $null)
+        {
+            $o.Add('ComputerName', $HostFQDN)
+            $o.Add('SweepId', $SweepId)
+            $o.Add('ScanId', $ScanId)
+            $o.Add('ResultDate', $ResultDate)
 
-        $message = ConvertTo-JsonV2 -InputObject $o
-        $dataList.Add($message)
+            try
+            {
+                $message = $o | ConvertTo-JsonV2
+                $dataList.Add($message)
+            }
+            catch
+            {
+                # We need to figure out what to do here
+                # This is if ConvertTo-JsonV2 throws an error
+                # Invoke-AceWebRequest -Thumbprint $Thumbprint -Uri "$($Uri)/ace/result/$($SweepId)" -Body $body
+            }
+        }
     }
 
-    $props = @{
-        RoutingKey   = $RoutingKey
-        ScanId       = $ScanId
-        Data         = $dataList.ToArray()
+    # Send 200 results at a time
+    # This keeps us under the Kestrel request size limit of 30MB
+    for($i = 0; $i -lt $dataList.Count; $i += 200)
+    {
+        $props = @{
+            RoutingKey   = $RoutingKey
+            ScanId       = $ScanId
+            Data         = $dataList[$i..($i+199)]
+        }
+
+        # Submit the results to the server
+        Invoke-AceWebRequest -Thumbprint $Thumbprint -Uri "$($ServerUri)/ace/result/$($SweepId)" -Body (ConvertTo-JsonV2 -InputObject $props) -Method Post
     }
-    
-    # Submit the results to the server
-    Invoke-AceWebRequest -Thumbprint $Thumbprint -Uri "$($ServerUri)/ace/result/$($SweepId)" -Body (ConvertTo-JsonV2 -InputObject $props) -Method Post
 }
 
 function ConvertTo-JsonV2 
 {
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [hashtable[]]
         $InputObject
     )
 
@@ -74,15 +92,10 @@ function ConvertTo-JsonV2
 
     Process 
     {
-        try 
+        foreach($item in $InputObject)
         {
-            $Serializer.Serialize($InputObject)
-        } 
-        catch 
-        {
-            # Write error message to ACE to let it know that the scan failed
-            Invoke-AceWebRequest -Thumbprint $Thumbprint -Uri "$($Uri)/ace/result/$($SweepId)" -Body $body
-        }    
+            $Serializer.Serialize($item)
+        }
     }
 }
 
