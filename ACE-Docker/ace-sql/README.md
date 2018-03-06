@@ -10,7 +10,10 @@ Built on [microsoft/mssql-server-linux](https://hub.docker.com/r/microsoft/mssql
 ## Using this Image
 ### Run
 ```
-docker run --name ace-sql -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d specterops/ace-sql
+docker run --name ace-sql -e 'SA_PASSWORD=yourStrong(!)Password' -e 'MSSQL_PID=Standard' -p 1433:1433 -d specterops/ace-sql
 ```
+### For Persistence
+If you desire your RabbitMQ data and setting to persist between containers, you need to create a docker volume `docker volume create sql-data` then add `-v sql-data:/var/opt/mssql` to the docker run command
+
 ### Environment Variables
 * **SA_PASSWORD** is the database system administrator (userid = 'sa') password used to connect to SQL Server once the container is running. Important note: This password needs to include at least 8 characters of at least three of these four categories: uppercase letters, lowercase letters, numbers and non-alphanumeric symbols.
