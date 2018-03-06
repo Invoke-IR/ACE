@@ -157,7 +157,7 @@ namespace ACEWebService.Services
                         string commandline = string.Format(
                             @"echo ""{0}"" | sudo python - --Server {1} --SweepId {2} --ScanId {3} --RoutingKey {4} --Thumbprint {5}",
                             rawScript,
-                            x.Item.Uri,
+                            x.Item.Uri, 
                             x.Item.SweepId,
                             x.Item.ScanId,
                             x.Item.Script.RoutingKey,
