@@ -13,7 +13,7 @@ Built on [RabbitMQ](https://hub.docker.com/_/rabbitmq/), this images provides th
 docker run --name ace-rabbitmq -e 'RABBITMQ_DEFAULT_USER=yourUsername' -e 'RABBITMQ_DEFAULT_PASS=yourPassword' -e 'APIKEY=yourVirusTotalPublicAPIKey' -p 5672:5672 -p 15672:15672 -d specterops/ace-rabbitmq
 ```
 # For Persistence
-If you desire your RabbitMQ data and setting to persist between containers, you need to create a docker volume ```docker volume create rabbitmq``` then add ```-v rabbitmq:/var/lib/rabbitmq``` to the docker run command
+If you desire your RabbitMQ data and setting to persist between containers, you need to create a docker volume `docker volume create rabbitmq` then add `-v rabbitmq:/var/lib/rabbitmq` to the docker run command
 
 ### Environment Variables
 * **RABBITMQ_DEFAULT_USER** Username for RabbitMQ server. Will be used to connect to server and log into management interface.
